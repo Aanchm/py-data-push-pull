@@ -24,7 +24,7 @@ def pull_from_influx(url, token, org, bucket, measurement, filter_dictionary, ig
     return data
 
 
-def clean_data (raw_data, normalise_timestamp):
+def clean_data (data, normalise_timestamp):
     
     if 'result' in data.columns:
         data = data.drop("result", axis = 1)

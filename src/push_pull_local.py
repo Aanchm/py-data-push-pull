@@ -8,22 +8,25 @@ import glob
 def get_file_list_containing_strings(str_list, data_path):
 
     all_files = os.listdir(data_path)
-    selected_files = [file for str in str_list for file in all_files if str in file]
+    selected_files = list(set([file for str in str_list for file in all_files if str in file]))
 
     return selected_files
 
 
 def load_dictionary_from_json(file, ignore_fields_list):
 
+    if not os.path.isfile(file):
+        return None
+
     with open(file, 'r') as file:
         read_lines = file.readlines()
-
+        
         for line in read_lines:
             dictionary = line.replace(' ', '')
 
         file.close()
    
-    dictionary = json.loads(dictionary[:-1])
+    dictionary = json.loads(dictionary)
     for field in ignore_fields_list:
         del dictionary[field]
 
@@ -32,9 +35,9 @@ def load_dictionary_from_json(file, ignore_fields_list):
 
 def get_most_recent_file(data_path, file_extension):
 
-    file_path = f"{data_path} _*{file_extension}"
-    data_file = max(glob.iglob(file_path), key=os.path.getctime)
-
+    file_path = fr"{data_path}\*{file_extension}"
+    data_file = max(glob.iglob(file_path), key=os.path.getctime, default = None)
+    print(data_file)
     return data_file
 
 
