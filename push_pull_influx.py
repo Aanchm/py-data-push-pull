@@ -41,3 +41,12 @@ def clean_data (raw_data, normalise_timestamp):
     return data
 
 
+def push_to_influx(url, token, org, bucket, measurement, tables, tags_list):
+
+    with InfluxDBClient(url=url, token=token, org=org, debug=False, verify_ssl = False, timeout=3000000) as client:
+        
+        write_api = client.write_api(write_options=SYNCHRONOUS)
+        write_api.write(bucket = bucket, record=tables, data_frame_measurement_name=measurement,
+                        data_frame_tag_columns=tags_list)
+
+                        
